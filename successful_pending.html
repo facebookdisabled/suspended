@@ -2,194 +2,467 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Facebook Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Pending</title>
     <style>
-        /* --- General Settings --- */
-        body {
+        * {
             margin: 0;
-            padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            /* Page ka background light gray (FB Style) rakha hai taaki text dikhe. 
-               Agar aapko bilkul transparent chahiye to #f0f2f5 ko hata kar 'transparent' likh dein */
-            background-color: #f0f2f5; 
-            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #fff;
+            background-image: url('https://wallpapercave.com/wp/wp6277399.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            box-sizing: border-box;
-            overflow: hidden;
         }
-
-        /* --- POPUP STYLES (Congratulation) --- */
-        #congrats-popup {
-            position: fixed;
+        
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1877F2 0%, #0056b3 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
         }
-
-        .congrats-text {
-            color: #ffffff;
-            /* Mobile ke hisab se text size (Viewport Width ka use kiya hai) */
-            font-size: 10vw; 
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: popIn 0.5s ease-out;
-            text-align: center;
-            padding: 0 10px;
-        }
-
-        /* --- MAIN CONTENT STYLES --- */
-        #main-content {
-            opacity: 0;
-            transition: opacity 0.8s ease;
+        
+        .container {
             width: 100%;
-            max-width: 400px; /* Mobile width limit */
-            text-align: center;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+            background-color: rgba(20, 20, 20, 0.8);
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+        }
+        
+        .logo {
+            width: auto;
+            max-width: 150px;
+            height: auto;
+            animation: glowLogoBlue 2s infinite alternate;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
+        }
+        
+        @keyframes glowLogoBlue {
+            0% { filter: drop-shadow(0 0 5px rgba(66, 103, 178, 0.7)); }
+            100% { filter: drop-shadow(0 0 20px rgba(66, 103, 178, 1)); }
+        }
+        
+        .language-toggle {
+            background: linear-gradient(135deg, #4267B2, #3b5998);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(66, 103, 178, 0.4);
+        }
+        
+        .language-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 103, 178, 0.6);
+        }
+        
+        .language-toggle:active {
+            transform: translateY(1px);
+        }
+        
+        .content {
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        /* Card ka background transparent kar diya hai */
-        .card {
-            background-color: transparent; /* Transparent Background */
-            box-shadow: none; /* Shadow hata diya */
-            padding: 20px 10px;
+            justify-content: space-between;
             width: 100%;
+            flex: 1;
         }
-
-        .fb-logo {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        
+        .text-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 20px;
         }
-
-        .fb-wordmark {
-            color: #1877F2;
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            display: block;
-            letter-spacing: -0.5px;
-        }
-
-        .success-icon {
-            color: #42b72a;
-            font-size: 70px;
-            margin-bottom: 25px;
-            display: block;
-            text-shadow: 0 2px 10px rgba(66, 183, 42, 0.2);
-        }
-
+        
         h1 {
-            color: #050505;
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 0 12px 0;
-            line-height: 1.2;
+            font-size: 22px;
+            color: #00cc00;
+            margin-bottom: 15px;
+            text-align: left;
         }
-
+        
         p {
-            color: #65676b;
-            font-size: 17px;
-            line-height: 1.5;
-            margin: 0 0 30px 0;
-            padding: 0 10px;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ddd;
+            margin-bottom: 20px;
+            text-align: left;
         }
-
-        .btn {
-            background-color: #1877F2;
-            color: white;
-            border: none;
-            padding: 14px 0;
-            border-radius: 8px; /* Thoda round corners mobile style */
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            text-decoration: none;
+        
+        .highlight {
+            color: #4267B2;
+            font-weight: bold;
+        }
+        
+        .english-text {
             display: block;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.1s;
         }
-
-        .btn:active {
-            transform: scale(0.98);
-            background-color: #166fe5;
+        
+        .hindi-text {
+            display: none;
         }
-
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        
+        /* Loading image animation */
+        .unlock-image {
+            height: 24px;
+            width: auto;
+            animation: loadingBlueGlow 2s infinite;
+        }
+        
+        @keyframes loadingBlueGlow {
+            0% { opacity: 0.7; transform: scale(0.95); filter: drop-shadow(0 0 5px rgba(66, 103, 178, 0.7)); }
+            50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(66, 103, 178, 1)); }
+            100% { opacity: 0.7; transform: scale(0.95); filter: drop-shadow(0 0 5px rgba(66, 103, 178, 0.7)); }
+        }
+        
+        .countdown-container {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .countdown-title {
+            font-size: 1.3rem;
+            color: #4267B2;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .countdown-box {
+            background: linear-gradient(135deg, #333, #222);
+            padding: 10px;
+            min-width: 70px;
+        }
+        
+        .countdown-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4267B2;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            color: #ddd;
+            margin-top: 5px;
+        }
+        
+        /* Man image with even slower blue glow */
+        .man-image-container {
+            margin-top: 10px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Loading image above man.gif with blue glow */
+        .bottom-loading-container {
+            margin: 20px auto 10px auto;
+            text-align: center;
+        }
+        
+        .man-image {
+            max-width: 100%;
+            height: auto;
+            animation: verySlowGlowingEffect 8s infinite alternate;
+        }
+        
+        @keyframes verySlowGlowingEffect {
+            0% { filter: drop-shadow(0 0 5px rgba(66, 103, 178, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(66, 103, 178, 0.9)); }
+        }
+        
+        @media (max-width: 800px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .content {
+                flex-direction: column;
+                text-align: left;
+            }
+            
+            .text-container {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .language-toggle {
+                margin-top: 15px;
+                align-self: flex-end;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            p {
+                font-size: 16px;
+            }
+            
+            .countdown-timer {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-box {
+                min-width: 60px;
+            }
+            
+            .countdown-value {
+                font-size: 1.5rem;
+            }
+            
+            .man-image {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (min-width: 801px) {
+            .man-image {
+                max-width: 500px;
+                height: auto;
+            }
+            
+            .content {
+                justify-content: space-between;
+                min-height: calc(100vh - 200px);
+            }
+            
+            .countdown-container {
+                margin-top: auto;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div id="congrats-popup">
-        <div class="congrats-text">CONGRATULATIONS</div>
-    </div>
-
-    <div id="main-content">
-        <div class="card">
-            <svg class="fb-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#1877F2" d="M1024 512c0-282.77-229.23-512-512-512S0 229.23 0 512c0 255.55 187.23 467.37 432 505.78V660H302V512h130V399.2C432 270.88 508.44 200 625.39 200c56.02 0 114.61 10 114.61 10v126H675.47c-63.6 0-83.47 39.47-83.47 79.92V512h142l-22.7 148H592v357.78C836.77 979.37 1024 767.55 1024 512z"/>
-                <path fill="#ffffff" d="M711.3 660L734 512H592V415.92c0-40.45 19.87-79.92 83.47-79.92H740V210s-58.59-10-114.61-10C508.44 200 432 270.88 432 399.2V512H302v148h130v357.78c26.54 4.16 53.76 6.22 81.39 6.22 26.68 0 52.95-1.93 78.61-5.78V660h89.3z"/>
-            </svg>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="f_b-logo.svg" alt="FB Logo">
+            </div>
+            <button class="language-toggle" id="languageToggle">Translate to Hindi</button>
+        </div>
+        
+        <div class="content">
+            <div class="text-container">
+                <div class="english-text" id="englishText">
+                    <h1>Due to some technical reasons, the link to unlock your Facebook account has not been sent yet. Please don't worry!</h1>
+                    <p>We have initiated the process to unlock your Facebook ID. Everything has been set up, and your ID will be unlocked soon. Normally, it happens instantly, but in your case, it might take some time. You will need to wait for 24 to 48 hours, after which your ID will be unlocked.
+                    If, for any reason, it is still not unlocked, then it will definitely be unlocked within 7 days—this is our promise. And if it still doesn't get unlocked, you will receive a full refund of the amount you paid. So, don't worry about it.
+                    Thank you for being a valued part of the Facebook community!</p>
+                </div>
+                
+                <div class="hindi-text" id="hindiText">
+                    <h1>Kuchh tekniki karanon ke karan tumhari Facebook ID unlock karne ka link abhi tak nahi bheja gaya hai. Kripya chinta mat karo!</h1>
+                    <p>Humne tumhari Facebook ID unlock karne ka process shuru kar diya hai. Sab kuch set ho chuka hai, aur tumhari ID jaldi hi unlock ho jayegi. Aam taur par yeh turant ho jata hai, lekin tumhare case mein thoda samay lag sakta hai. Tumhe 24 se 48 ghante tak intezar karna padega, uske baad tumhari ID unlock ho jayegi.
+                    Agar kisi wajah se fir bhi unlock nahi hoti hai, to yeh pakka 7 din ke andar ho jayegi—yeh hamara wada hai. Aur agar tab bhi unlock nahi hoti hai, to jitna paisa tumne diya hai, utna pura refund mil jayega. To chinta mat karo, tumhari ID zaroor unlock hogi.
+                    Dhanyavad, Facebook community ka ek mehtvapurn hissa banne ke liye!</p>
+                </div>
+            </div>
+        
+            <div class="countdown-container">
+                <div class="countdown-title">Your account will be unlocked in:</div>
+                <div class="countdown-timer">
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="days">7</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="hours">0</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="minutes">0</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="seconds">0</div>
+                        <div class="countdown-label">Seconds</div>
+                    </div>
+                </div>
+            </div>
             
-            <span class="fb-wordmark">facebook</span>
-
-            <div class="success-icon">✓</div>
-
-            <h1>Account Access Restored</h1>
+            <!-- Loading image above man.gif with blue glow -->
+            <div class="bottom-loading-container">
+                <img class="unlock-image" src="unlock-successful.gif" alt="Loading">
+            </div>
             
-            <p>We have successfully verified your identity. The suspension on your account has been lifted.</p>
-            
-            <p style="font-size: 15px; color: #65676b;">Your Facebook account is now fully active. Tap below to return.</p>
-
-            <button class="btn" onclick="openFacebookApp()">Go to News Feed</button>
+            <!-- Man image with even slower blue glow -->
+            <div class="man-image-container">
+                <img class="man-image" src="man.gif" alt="Man GIF">
+            </div>
         </div>
     </div>
 
+
+
+
     <script>
-        // 1. Popup Animation Logic
-        window.onload = function() {
-            const popup = document.getElementById('congrats-popup');
-            const mainContent = document.getElementById('main-content');
-
-            setTimeout(() => {
-                popup.style.opacity = '0';
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                    mainContent.style.opacity = '1';
-                }, 500); 
-            }, 2000); // 2 Seconds
-        };
-
-        // 2. Redirect Logic
-        function openFacebookApp() {
-            var appUrl = "fb://feed";
-            var webUrl = "https://www.facebook.com";
-
-            window.location.href = appUrl;
-
-            setTimeout(function() {
-                window.location.href = webUrl;
-            }, 1000);
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const englishText = document.getElementById('englishText');
+            const hindiText = document.getElementById('hindiText');
+            
+            let isEnglish = true;
+            
+            languageToggle.addEventListener('click', function() {
+                if (isEnglish) {
+                    // Switch to Hindi
+                    englishText.style.display = 'none';
+                    hindiText.style.display = 'block';
+                    languageToggle.textContent = 'Translate to English';
+                } else {
+                    // Switch to English
+                    englishText.style.display = 'block';
+                    hindiText.style.display = 'none';
+                    languageToggle.textContent = 'Translate to Hindi';
+                }
+                
+                isEnglish = !isEnglish;
+            });
+            
+            // Persistent countdown functionality
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            
+            // Generate a unique identifier for this device/browser
+            function generateDeviceId() {
+                let deviceId = localStorage.getItem('fbDeviceId');
+                if (!deviceId) {
+                    deviceId = 'device_' + Math.random().toString(36).substring(2, 15);
+                    localStorage.setItem('fbDeviceId', deviceId);
+                }
+                return deviceId;
+            }
+            
+            const deviceId = generateDeviceId();
+            
+            // Check if countdown has already started for this device
+            function getCountdownEndTime() {
+                const savedEndTime = localStorage.getItem(`fbCountdownEnd_${deviceId}`);
+                if (savedEndTime) {
+                    return parseInt(savedEndTime);
+                }
+                
+                // If not started yet, set end time to 7 days from now
+                const endTime = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
+                localStorage.setItem(`fbCountdownEnd_${deviceId}`, endTime.toString());
+                return endTime;
+            }
+            
+            const countdownEndTime = getCountdownEndTime();
+            
+            // Update countdown timer
+            function updateCountdown() {
+                const currentTime = Date.now();
+                const timeRemaining = countdownEndTime - currentTime;
+                
+                if (timeRemaining <= 0) {
+                    // Countdown finished
+                    daysElement.textContent = '0';
+                    hoursElement.textContent = '0';
+                    minutesElement.textContent = '0';
+                    secondsElement.textContent = '0';
+                    return;
+                }
+                
+                // Calculate remaining time
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                
+                // Update the display
+                daysElement.textContent = days;
+                hoursElement.textContent = hours;
+                minutesElement.textContent = minutes;
+                secondsElement.textContent = seconds;
+            }
+            
+            // Initial update
+            updateCountdown();
+            
+            // Update countdown every second
+            setInterval(updateCountdown, 1000);
+            
+            // Disable right-click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
     </script>
-
 </body>
 </html>
